@@ -8,6 +8,9 @@ import random
 
 today = datetime.now()
 start_date = os.environ['START_DATE']
+
+blood_date = os.environ['BLOOD_DATE']
+
 city = os.environ['CITY']
 birthday = os.environ['BIRTHDAY']
 
@@ -17,6 +20,9 @@ app_secret = os.environ["APP_SECRET"]
 user_id = os.environ["USER_ID"]
 template_id = os.environ["TEMPLATE_ID"]
 
+def get_blood_date():
+  delta = datetime.strptime(blood_date, "%Y-%m-%d") - today
+  return delta.days
 
 def get_weather():
   url = "http://autodev.openspeech.cn/csp/api/v2.1/weather?openId=aiuicus&clientType=android&sign=android&city=" + city
@@ -48,6 +54,6 @@ client = WeChatClient(app_id, app_secret)
 
 wm = WeChatMessage(client)
 wea, temperature = get_weather()
-data = {"weather":{"value":wea},"temperature":{"value":temperature},"love_days":{"value":get_count()},"birthday_left":{"value":get_birthday()},"words":{"value":get_words(), "color":get_random_color()}}
+data = {"weather":{"value":wea},"temperature":{"value":temperature},"love_days":{"value":get_count()},"blood_days":{"value":get_blood_date()},"birthday_left":{"value":get_birthday()},"words":{"value":get_words(), "color":get_random_color()}}
 res = wm.send_template(user_id, template_id, data)
 print(res)
